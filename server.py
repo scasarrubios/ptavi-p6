@@ -14,14 +14,28 @@ class EchoHandler(socketserver.DatagramRequestHandler):
     """
 
     def handle(self):
-        # Escribe dirección y puerto del cliente (de tupla client_address)
-        self.wfile.write(b"Hemos recibido tu peticion")
         line = self.rfile.read().decode('utf-8').split()
-
+        my_methods = ['INVITE', 'ACK', 'BYE']
+        if line[0] not in my_methods:
+            self.wfile.write(b'SIP/2.0 405 Method Not Allowed\r\n\r\n')
+        elif len(line) != 3:
+            self.wfile.write(b'SIP/2.0 400 Bad Request\r\n\r\n')
+        else:
+            if line[0] == 'INVITE':
+                template = ('SIP/2.0 100 Trying\r\n\r\n'
+                            'SIP/2.0 180 Ring\r\n\r\n'
+                            'SIP/2.0 200 OK\r\n\r\n')
+                self.wfile.write(bytes(template, 'utf-8'))
+                print("invite")
+            elif line[0] == 'ACK':
+                print('ack')
+            elif line[0] == 'BYE':
+                self.wfile.write(b'SIP/2.0 200 OK\r\n\r\n')
 if __name__ == "__main__":
     # Creamos servidor de eco y escuchamos
     try:
         serv = socketserver.UDPServer((sys.argv[1], int(sys.argv[2])), EchoHandler)
+        archivo_audio = sys.argv[3]
         print("Lanzando servidor UDP de eco...")
     except IndexError:
         sys.exit("Usage: python server.py IP port audio_file")
