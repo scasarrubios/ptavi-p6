@@ -38,6 +38,8 @@ if __name__ == "__main__":
         serv = socketserver.UDPServer((sys.argv[1],
                                        int(sys.argv[2])), EchoHandler)
         archivo_audio = sys.argv[3]
+        if not os.path.isfile(archivo_audio):
+            sys.exit('File Error: ' + archivo_audio + ' does not exist')
         print("Listening...")
     except IndexError:
         sys.exit("Usage: python server.py IP port audio_file")
