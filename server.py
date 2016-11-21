@@ -27,17 +27,16 @@ class EchoHandler(socketserver.DatagramRequestHandler):
                             'SIP/2.0 180 Ring\r\n\r\n'
                             'SIP/2.0 200 OK\r\n\r\n')
                 self.wfile.write(bytes(template, 'utf-8'))
-                print("invite")
             elif line[0] == 'ACK':
-                print('ack')
-                os.system('./mp32rtp -i 127.0.0.1 -p 23032 < ' + 
+                os.system('./mp32rtp -i 127.0.0.1 -p 23032 < ' +
                           archivo_audio)
             elif line[0] == 'BYE':
                 self.wfile.write(b'SIP/2.0 200 OK\r\n\r\n')
-                
+
 if __name__ == "__main__":
     try:
-        serv = socketserver.UDPServer((sys.argv[1], int(sys.argv[2])), EchoHandler)
+        serv = socketserver.UDPServer((sys.argv[1],
+                                       int(sys.argv[2])), EchoHandler)
         archivo_audio = sys.argv[3]
         print("Listening...")
     except IndexError:
