@@ -28,13 +28,9 @@ template = ('SIP/2.0 100 Trying\r\n\r\n'
             'SIP/2.0 180 Ring\r\n\r\n'
             'SIP/2.0 200 OK\r\n\r\n')
 if answer == template:
-    print('ackk')
     method = 'ACK'
     line = method + ' sip:' + RECEIVER + '@' + SERVER + ' SIP/2.0'
     my_socket.send(bytes(line, 'utf-8') + b'\r\n\r\n')
 print('Recibido --', '\n'+answer)
-print("Terminando socket...")
-
-# Cerramos todo
 my_socket.close()
 print("Fin.")
